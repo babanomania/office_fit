@@ -1,13 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:office_fit/widgets/ActivityStatusCard.dart';
 import 'package:office_fit/AppRoutes.dart';
+import 'package:office_fit/models/ActivityViewModel.dart';
+import 'package:office_fit/util/DurationUtil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ListActivitiesScreen extends StatelessWidget {
 
-  ListActivitiesScreen({ this.openDetail, this.deleteActivity });
+  ListActivitiesScreen({ this.viewModel, this.openDetail, this.deleteActivity });
 
-  final ValueChanged<String> openDetail ;
-  final ValueChanged<String> deleteActivity ;
+  final List<ActivityViewModel> viewModel;
+  final ValueChanged<ActivityViewModel> openDetail ;
+  final ValueChanged<ActivityViewModel> deleteActivity ;
+
+  Widget getListView( BuildContext context ){
+
+    return new ListView(
+
+      children: viewModel.map(
+            (ActivityViewModel model) =>
+        new ActivityStatusCard(
+
+          isEnabled: model.perf.history.last.recordDate == DurationUtil.atMidnight( DateTime.now() ),
+
+          imageAsset: model.title.image,
+          title: model.title.title,
+
+          currentActivityCnt: model.perf.history.last.count,
+          totalActivityCnt: model.repetitions,
+
+          nextNotification: model.perf.history.last.nextNotification,
+          notificationInterval: model.interval,
+
+          openDetail: (() {
+            openDetail( model);
+            Navigator.pushNamed(context, AppRoutes.activityDetail);
+          }),
+          deleteActivity: () => deleteActivity( model ),
+        ),
+
+      ).toList(),
+
+    );
+  }
+
+  Widget getEmptyText(){
+    return new Container(
+      child: new Center(
+        child: new Column(
+
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+
+          children: <Widget>[
+            new Icon( FontAwesomeIcons.handHoldingHeart, color: Colors.grey.withOpacity( 0.2 ), size: 96.0, ),
+            new Padding(
+                padding: EdgeInsets.all( 10.0 ),
+                child: new Text(
+                  "Add an activity to get started",
+                  style: TextStyle( color: Colors.grey.withOpacity( 0.5 ), fontSize: 24.0 ),
+                ),
+            ),
+          ],
+
+        ),
+      ),
+    );
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,84 +83,7 @@ class ListActivitiesScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).canvasColor.withOpacity( 0.99 ), elevation: 0.0,
         ),
 
-        body: new ListView(
-
-          children: <Widget>[
-
-            new ActivityStatusCard(
-
-              imageAsset: 'images/drink_water.png',
-              title: "Drink Water",
-
-              currentActivityCnt: 4,
-              totalActivityCnt: 10,
-
-              nextNotification: new Duration( minutes: 0 ),
-              notificationInterval: new Duration( minutes: 45 ),
-
-              openDetail: ((_) {
-                openDetail(_);
-                Navigator.pushNamed(context, AppRoutes.activityDetail);
-              }),
-              deleteActivity: deleteActivity,
-            ),
-
-            new ActivityStatusCard(
-              imageAsset: 'images/stand_up.png',
-              title: "Stand Up",
-
-              currentActivityCnt: 5,
-              totalActivityCnt: 40,
-
-              nextNotification: new Duration( minutes: 31 ),
-              notificationInterval: new Duration( hours: 1 ),
-
-              openDetail: ((_) {
-                openDetail(_);
-                Navigator.pushNamed(context, AppRoutes.activityDetail);
-              }),
-              deleteActivity: deleteActivity,
-            ),
-
-            new ActivityStatusCard(
-              isEnabled: false,
-
-              imageAsset: 'images/stretch.png',
-              title: "Stretch",
-
-              currentActivityCnt: 4,
-              totalActivityCnt: 20,
-
-              nextNotification: new Duration( hours: 1, minutes: 23 ),
-              notificationInterval: new Duration( hours: 2 ),
-
-              openDetail: ((_) {
-                openDetail(_);
-                Navigator.pushNamed(context, AppRoutes.activityDetail);
-              }),
-              deleteActivity: deleteActivity,
-            ),
-
-            new ActivityStatusCard(
-              imageAsset: 'images/walk.png',
-              title: "Short Walks",
-
-              currentActivityCnt: 5,
-              totalActivityCnt: 5,
-
-              nextNotification: new Duration( minutes: 0 ),
-              notificationInterval: new Duration( minutes: 15 ),
-
-              openDetail: ((_) {
-                openDetail(_);
-                Navigator.pushNamed(context, AppRoutes.activityDetail);
-              }),
-              deleteActivity: deleteActivity,
-            ),
-
-          ],
-
-        ),
+        body: viewModel.length > 0 ? getListView(context) : getEmptyText(),
 
         floatingActionButton: new FloatingActionButton(
               foregroundColor: Colors.white,

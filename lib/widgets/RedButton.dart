@@ -20,7 +20,7 @@ class RedButton extends StatelessWidget {
               padding: new EdgeInsets.only( top: 20.0, bottom: 20.0 ),
               child: new Text( this.text, style: new TextStyle( color: Colors.white, fontSize: 16.0 ), ),
             ),
-            onPressed: enabled ?  () => this.onPressed : null,
+            onPressed: enabled ? this.onPressed : null,
           ),
       );
   }

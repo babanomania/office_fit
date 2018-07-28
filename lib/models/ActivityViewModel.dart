@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:office_fit/util/DurationUtil.dart';
 
 class ActivityViewModel {
 
@@ -26,18 +25,20 @@ class ActivityDayRecord {
   ActivityDayRecord({ this.recordDate, this.count });
 
   final DateTime recordDate;
-  final int count;
+  int count;
 
-  List<DateTime> notifications;
+  List<DateTime> notifications = [];
 
-  String get nextNotification =>  DurationUtil.getAsSimpleText(
-                                                  notifications
-                                                      .firstWhere( (_dt) => _dt.isAfter( DateTime.now() ) )
-                                                      .difference( DateTime.now() )
-                                                );
+  Duration get nextNotification => ( notifications == null || notifications.isEmpty ) ? new Duration( minutes: 0 ) :
+                                        notifications
+                                          .firstWhere( (_dt) => _dt.isAfter( DateTime.now() ) )
+                                          .difference( DateTime.now() );
 
   String get date => new DateFormat( 'yyyy-MMM-dd' ).format( recordDate );
   String get day => new DateFormat( 'E' ).format( recordDate );
+
+  increment() => count++;
+  decrement() => count--;
 
 }
 

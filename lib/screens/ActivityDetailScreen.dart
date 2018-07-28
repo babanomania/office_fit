@@ -6,23 +6,31 @@ import 'package:office_fit/widgets/SmallStatus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:office_fit/util/DurationUtil.dart';
 import 'package:office_fit/models/ActivityViewModel.dart';
+import 'package:office_fit/AppRoutes.dart';
 
 enum AppBarMenu { edit, delete }
 
 class ActivityDetailScreen extends StatelessWidget {
 
-  ActivityDetailScreen({ this.editActivity, this.deleteActivity });
+  ActivityDetailScreen({  this.viewModel,
+                          this.editActivity, this.deleteActivity,
+                          this.doActivity, this.undoActivity });
 
-  final ValueChanged<String> editActivity;
-  final ValueChanged<String> deleteActivity;
+  final ActivityViewModel viewModel;
+  final ValueChanged<ActivityViewModel> editActivity;
+  final ValueChanged<ActivityViewModel> deleteActivity;
+  final ValueChanged<ActivityViewModel> doActivity;
+  final ValueChanged<ActivityViewModel> undoActivity;
 
   @override
   Widget build(BuildContext context) {
 
+    ActivityViewModel _viewModel = viewModel;
 
     /**
      * Fake Data Starts
      */
+    /*
     ActivityViewModel _viewModel = new ActivityViewModel();
     _viewModel.title = new ActivityType( title: "Drink Water", image: null );
     _viewModel.repetitions = 12;
@@ -48,6 +56,7 @@ class ActivityDetailScreen extends StatelessWidget {
         recordDate: new DateTime( 2017, 8, 12 ),
         count: 12
     );
+    */
     /**
      * Fake Data Ends
      */
@@ -80,10 +89,12 @@ class ActivityDetailScreen extends StatelessWidget {
             onSelected: (AppBarMenu result) {
 
               if( result == AppBarMenu.edit ) {
-                  this.editActivity( _viewModel.title.title );
+                  this.editActivity( _viewModel );
+                  Navigator.pushNamed(context, AppRoutes.editActivity );
 
               } else if( result == AppBarMenu.delete ) {
-                  this.deleteActivity( _viewModel.title.title );
+                  this.deleteActivity( _viewModel );
+                  Navigator.pushNamed(context, AppRoutes.listActivities );
 
               }
             },
@@ -154,10 +165,10 @@ class ActivityDetailScreen extends StatelessWidget {
                   iconSize: 45.0,
                   icon: new CircleAvatar(
                     child: new Icon( FontAwesomeIcons.plus ),
-                    backgroundColor: Colors.green,
+                    backgroundColor: today.count == _viewModel.repetitions ? Colors.grey.withOpacity(0.2) :Colors.green,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () => {},
+                  onPressed: () => today.count == _viewModel.repetitions ? null : this.doActivity( _viewModel ),
                 ),
 
                 new IconButton(
@@ -165,11 +176,11 @@ class ActivityDetailScreen extends StatelessWidget {
                   splashColor: Colors.grey,
                   icon: new CircleAvatar(
                     backgroundColor: Colors.white,
-                    foregroundColor: Colors.grey,
+                    foregroundColor: today.count == 0 ? Colors.grey.withOpacity(0.2) : Colors.grey,
                     radius: 22.0,
                     child: new Icon( FontAwesomeIcons.undo ),
                   ),
-                  onPressed: () => {},
+                  onPressed: () => today.count == 0 ? null : this.undoActivity( _viewModel ),
                 )
 
               ],

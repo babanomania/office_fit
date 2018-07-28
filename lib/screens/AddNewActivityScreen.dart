@@ -6,11 +6,13 @@ import 'package:office_fit/util/NumberTimesListUtil.dart';
 import 'package:office_fit/widgets/RedButton.dart';
 import 'package:office_fit/models/ActivityViewModel.dart';
 import 'package:office_fit/util/DurationUtil.dart';
+import 'package:office_fit/AppRoutes.dart';
 
 class AddNewActivityScreen extends StatefulWidget {
 
-  AddNewActivityScreen({ this.onSubmit });
+  AddNewActivityScreen({ this.viewModel, this.onSubmit });
 
+  final ActivityViewModel viewModel;
   final ValueChanged<ActivityViewModel> onSubmit;
 
   @override
@@ -114,9 +116,9 @@ class _AddNewActivityState extends State<AddNewActivityScreen>{
 
           new RedButton(
             text: "Submit",
-            onPressed: () =>((){
+            onPressed: ((){
               widget.onSubmit(_viewModel);
-              Navigator.pop(context);
+              Navigator.pushNamed(context, AppRoutes.listActivities);
             }),
             enabled: isAllSelected(),
           ),

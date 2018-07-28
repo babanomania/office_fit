@@ -1,53 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:office_fit/screens/OnBoardScreen.dart';
 import 'package:office_fit/screens/ListActivitiesScreen.dart';
 import 'package:office_fit/screens/ActivityDetailScreen.dart';
 import 'package:office_fit/screens/AddNewActivityScreen.dart';
+import 'package:office_fit/models/ActivityViewModel.dart';
 import 'package:office_fit/AppRoutes.dart';
+import 'package:office_fit/redux/AppState.dart';
+import 'package:office_fit/redux/Reducers.dart';
+import 'package:office_fit/redux/Middleware.dart';
+import 'package:office_fit/redux/Actions.dart';
 
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
 
+  final Store<AppState> store = Store<AppState>(
+    appReducer,
+    initialState: AppState.initial(),
+    middleware: createStoreMiddleware(),
+  );
+
   @override
   Widget build(BuildContext context) {
 
-    return new MaterialApp(
+    return StoreProvider(
 
-      title: 'Office Fit Demo',
+        store: this.store,
+        child: new MaterialApp(
 
-      theme: new ThemeData(
-          canvasColor: Colors.white,
-          iconTheme: new IconThemeData(
-            color: Colors.black,
-          ),
-      ),
+                title: 'Office Fit Demo',
 
-      initialRoute: AppRoutes.listActivities,
+                theme: new ThemeData(
+                    canvasColor: Colors.white,
+                    iconTheme: new IconThemeData(
+                      color: Colors.black,
+                    ),
+                ),
 
-      routes: {
+                initialRoute: AppRoutes.listActivities,
 
-        AppRoutes.onBoading: (context) =>
-            new OnBoardScreen(),
+                routes: {
 
-        AppRoutes.listActivities: (context) =>
-            new ListActivitiesScreen(
-              openDetail: (_) => print( "detail - " + _ ),
-              deleteActivity:  (_) => print( "delete - " + _ ),
-            ),
+                  AppRoutes.onBoading: (context) =>
+                      new OnBoardScreen(),
 
-        AppRoutes.activityDetail: (context) =>
-            new ActivityDetailScreen(
-              editActivity: (_) => print( "edit - " + _ ),
-              deleteActivity: (_) => print( "delete - " + _ ),
-            ),
+                  AppRoutes.listActivities: (context) =>
+                      new StoreConnector<AppState, List<ActivityViewModel>>(
+                        converter: (store) => store.state.activities,
+                        builder: (context, List<ActivityViewModel> viewModel) =>
+                            new ListActivitiesScreen(
+                              viewModel: viewModel,
+                              openDetail: (_) => store.dispatch( SelectActivity(_) ),
+                              deleteActivity:  (_) => store.dispatch( RemoveActivity(_) ),
+                            ),
+                      ),
 
-        AppRoutes.addNewActivity : (context) =>
-            new AddNewActivityScreen(
-              onSubmit: (_) => print( "submit - " ),
-            ),
 
-      },
+                  AppRoutes.activityDetail: (context) =>
+                      new StoreConnector<AppState, ActivityViewModel>(
+                        converter: (store) => store.state.currentActivity,
+                        builder: (context, ActivityViewModel viewModel) =>
+                            new ActivityDetailScreen(
+                              viewModel: viewModel,
+                              editActivity: (_) => store.dispatch( SelectActivity(_) ),
+                              deleteActivity: (_) => store.dispatch( RemoveActivity(_) ),
+                              doActivity: (_) => store.dispatch( DoActivity(_) ),
+                              undoActivity: (_) => store.dispatch( UndoActivity(_) ),
+                            ),
+                      ),
+
+
+                  AppRoutes.addNewActivity : (context) =>
+                      new StoreConnector<AppState, ActivityViewModel>(
+                        converter: (store) => new ActivityViewModel(),
+                        builder: (context, ActivityViewModel viewModel) =>
+                            new AddNewActivityScreen(
+                              viewModel: viewModel,
+                              onSubmit: (_) => store.dispatch( AddActivity(_) ),
+                            )
+
+                      ),
+
+
+                  AppRoutes.editActivity : (context) =>
+                      new StoreConnector<AppState, ActivityViewModel>(
+                          converter: (store) => store.state.currentActivity,
+                          builder: (context, ActivityViewModel viewModel) =>
+                              new AddNewActivityScreen(
+                                viewModel: viewModel,
+                                onSubmit: (_) => store.dispatch( EditActivity(_) ),
+                              )
+
+                      ),
+                },
+
+              ),
 
     );
   }

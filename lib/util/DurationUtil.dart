@@ -55,4 +55,12 @@ class DurationUtil {
 
   }
 
+  static DateTime atMidnight( DateTime when ){
+    return new DateTime(
+            when.year,
+            when.month,
+            when.day,
+          );
+  }
+
 }

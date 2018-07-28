@@ -22,8 +22,8 @@ class ActivityStatusCard extends StatelessWidget {
   final Duration nextNotification ;
   final Duration notificationInterval ;
 
-  final ValueChanged<String> openDetail ;
-  final ValueChanged<String> deleteActivity ;
+  final VoidCallback openDetail ;
+  final VoidCallback deleteActivity ;
 
   final Color disabled = Colors.grey;
 
@@ -96,7 +96,7 @@ class ActivityStatusCard extends StatelessWidget {
       return new Dismissible(
 
           key: new GlobalKey(),
-          onDismissed: (_) => deleteActivity( this.title ),
+          onDismissed: (_) => deleteActivity(),
           background: new ListTile(
             leading: new Padding(
               padding: new EdgeInsets.only( top: 50.0, left: 30.0 ),
@@ -127,7 +127,7 @@ class ActivityStatusCard extends StatelessWidget {
                   trailing: _getTrailingIconText(),
 
                   onTap: this.isEnabled ? ((){
-                    this.openDetail( this.title );
+                    this.openDetail();
                   }) : null,
 
                 ),

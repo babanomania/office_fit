@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BarData {
 
@@ -28,6 +29,20 @@ class BarChart extends StatelessWidget {
     );
   }
 
+  Widget getEmptyData(){
+
+    return new Padding(
+      padding: EdgeInsets.all( 20.0 ),
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Icon( FontAwesomeIcons.chartBar, color: Colors.grey, ),
+          new Text( " not enough data", style: new TextStyle( color: Colors.grey ), ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -37,11 +52,14 @@ class BarChart extends StatelessWidget {
       maxValue =  maxValue > barData.value ? maxValue : barData.value ;
     });
 
-    return new Padding(
-      padding: new EdgeInsets.all( 10.0 ),
-      child: new Column(
-        children: data.map(  (barData) => getBarLine( barData.label, barData.value, maxValue) ).toList(),
-      ),
-    );
+    return data.length > 0 ?
+            new Padding(
+              padding: new EdgeInsets.all( 10.0 ),
+              child: new Column(
+                children: data.map(  (barData) => getBarLine( barData.label, barData.value, maxValue) ).toList(),
+              ),
+            ) :
+
+            getEmptyData();
   }
 }
