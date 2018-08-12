@@ -74,13 +74,12 @@ class MyApp extends StatelessWidget {
 
                   AppRoutes.addNewActivity : (context) =>
                       new StoreConnector<AppState, ActivityViewModel>(
-                        converter: (store) => new ActivityViewModel(),
+                        converter: (_) => new ActivityViewModel(),
                         builder: (context, ActivityViewModel viewModel) =>
                             new AddNewActivityScreen(
                               viewModel: viewModel,
                               onSubmit: (_) => store.dispatch( AddActivity(_) ),
-                            )
-
+                            ),
                       ),
 
 
@@ -91,8 +90,7 @@ class MyApp extends StatelessWidget {
                               new AddNewActivityScreen(
                                 viewModel: viewModel,
                                 onSubmit: (_) => store.dispatch( EditActivity(_) ),
-                              )
-
+                              ),
                       ),
                 },
 

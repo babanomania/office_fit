@@ -9,12 +9,16 @@ class TimeListUtil {
                                      ).toList();
   }
 
-  static List<DateTime> getAsList(int duration){
+  static List<DateTime> getAsList( int duration){
+    return getAsListAD( 0, 0, duration );
+  }
+
+  static List<DateTime> getAsListAD( int startHour, int starMin, int duration){
 
     List<DateTime> listOfTimes = <DateTime>[ ];
 
-    int hour = 0;
-    int min = 0;
+    int hour = startHour;
+    int min = starMin;
 
     for( hour = 0 ; hour < 24 ; hour++){
       for( min = 0 ; min < 60 ; min= min + duration){

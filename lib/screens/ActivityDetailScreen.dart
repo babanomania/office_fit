@@ -61,7 +61,10 @@ class ActivityDetailScreen extends StatelessWidget {
      * Fake Data Ends
      */
 
-    ActivityDayRecord today = _viewModel.perf.history.last;
+    ActivityDayRecord today = _viewModel.perf
+                                        .history
+                                        .firstWhere( (_adr) => _adr.recordDate == DurationUtil.atMidnight(DateTime.now()) );
+
     ActivityDayRecord bestPerformance = _viewModel.perf.best;
     ActivityDayRecord worstPerformance = _viewModel.perf.worst;
 

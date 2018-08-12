@@ -19,25 +19,26 @@ class ListActivitiesScreen extends StatelessWidget {
 
       children: viewModel.map(
             (ActivityViewModel model) =>
-        new ActivityStatusCard(
 
-          isEnabled: model.perf.history.last.recordDate == DurationUtil.atMidnight( DateTime.now() ),
+                new ActivityStatusCard(
 
-          imageAsset: model.title.image,
-          title: model.title.title,
+                  isEnabled: model.perf.history.last.recordDate == DurationUtil.atMidnight( DateTime.now() ),
 
-          currentActivityCnt: model.perf.history.last.count,
-          totalActivityCnt: model.repetitions,
+                  imageAsset: model.title.image,
+                  title: model.title.title,
 
-          nextNotification: model.perf.history.last.nextNotification,
-          notificationInterval: model.interval,
+                  currentActivityCnt: model.perf.history.last.count,
+                  totalActivityCnt: model.repetitions,
 
-          openDetail: (() {
-            openDetail( model);
-            Navigator.pushNamed(context, AppRoutes.activityDetail);
-          }),
-          deleteActivity: () => deleteActivity( model ),
-        ),
+                  nextNotification: model.perf.history.last.nextNotification,
+                  notificationInterval: model.interval,
+
+                  openDetail: (() {
+                    openDetail( model);
+                    Navigator.pushNamed(context, AppRoutes.activityDetail);
+                  }),
+                  deleteActivity: () => deleteActivity( model ),
+                ),
 
       ).toList(),
 
@@ -57,7 +58,7 @@ class ListActivitiesScreen extends StatelessWidget {
             new Padding(
                 padding: EdgeInsets.all( 10.0 ),
                 child: new Text(
-                  "Add an activity to get started",
+                  "Add an activity",
                   style: TextStyle( color: Colors.grey.withOpacity( 0.5 ), fontSize: 24.0 ),
                 ),
             ),
