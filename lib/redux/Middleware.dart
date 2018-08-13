@@ -5,6 +5,7 @@ import 'package:office_fit/redux/AppState.dart';
 import 'package:office_fit/models/ActivityViewModel.dart';
 import 'package:office_fit/util/DurationUtil.dart';
 import 'dart:convert';
+import 'package:office_fit/util/DataPersistance.dart';
 
 List<Middleware<AppState>> createStoreMiddleware() => [
   TypedMiddleware<AppState, AddActivity>(_addActivity),
@@ -34,7 +35,9 @@ Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher ne
   _addNotifications( firstRecord.notifications, DateTime.now(), action.item.start, action.item.end, action.item.interval );
   action.item.perf.history.add( firstRecord );
 
-  var encoded = json.encode( action.item );
+  DataPersistance dao = await DataPersistance.instance;
+  var encoded = json.encode( store.state );
+  dao.save(encoded);
   print( "save this encoded model -> " + encoded );
 
   next(action);
@@ -43,7 +46,9 @@ Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher ne
 Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher next) async {
   print( "edit activity " + action.item.title.title );
 
-  var encoded = json.encode( action.item );
+  DataPersistance dao = await DataPersistance.instance;
+  var encoded = json.encode( store.state );
+  dao.save(encoded);
   print( "save this encoded model -> " + encoded );
 
   next(action);
@@ -51,6 +56,12 @@ Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher 
 
 Future _removeActivity(Store<AppState> store, RemoveActivity action, NextDispatcher next) async {
   print( "remove activity " + action.item.title.title  );
+
+  DataPersistance dao = await DataPersistance.instance;
+  var encoded = json.encode( store.state );
+  dao.save(encoded);
+  print( "save this encoded model -> " + encoded );
+
   next(action);
 }
 

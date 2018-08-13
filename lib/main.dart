@@ -12,15 +12,36 @@ import 'package:office_fit/redux/Reducers.dart';
 import 'package:office_fit/redux/Middleware.dart';
 import 'package:office_fit/redux/Actions.dart';
 
-void main() => runApp(new MyApp());
+import 'package:office_fit/util/DataPersistance.dart';
+import 'dart:async';
+
+void main() => runApp(new OfficeFitApp());
+
+class OfficeFitApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new FutureBuilder<DataPersistance>(
+        future: DataPersistance.instance,
+        builder: (context, snapshot){
+          return new MyApp(
+              store: Store<AppState>(
+                        appReducer,
+                        initialState: snapshot.data.retreive() == null ?
+                                            AppState.initial() :
+                                            AppState.fromJson( snapshot.data.retreive() ),
+
+                        middleware: createStoreMiddleware(),
+                      )
+          );
+        },
+    );
+  }
+}
 
 class MyApp extends StatelessWidget {
 
-  final Store<AppState> store = Store<AppState>(
-    appReducer,
-    initialState: AppState.initial(),
-    middleware: createStoreMiddleware(),
-  );
+  final Store<AppState> store ;
+  MyApp({ this.store });
 
   @override
   Widget build(BuildContext context) {
