@@ -22,7 +22,8 @@ class ListActivitiesScreen extends StatelessWidget {
 
                 new ActivityStatusCard(
 
-                  isEnabled: model.perf.history.last.recordDate == DurationUtil.atMidnight( DateTime.now() ),
+                  isEnabled: model.perf.history.last != null &&
+                             model.perf.history.last.recordDate == DurationUtil.atMidnight( DateTime.now() ),
 
                   imageAsset: model.title.image,
                   title: model.title.title,

@@ -16,6 +16,14 @@ List<Middleware<AppState>> createStoreMiddleware() => [
   TypedMiddleware<AppState, UndoActivity>(_undoActivity),
 ];
 
+_saveState( AppState state ) async {
+
+  DataPersistance dao = await DataPersistance.instance;
+  var encoded = json.encode( state );
+  dao.save(encoded);
+  //print( "save this encoded model -> " + encoded );
+}
+
  _addNotifications( List<DateTime> notifications, DateTime when, Duration start, Duration end, Duration interval ){
 
   Duration startWith = new Duration( minutes: start.inMinutes );
@@ -35,33 +43,21 @@ Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher ne
   _addNotifications( firstRecord.notifications, DateTime.now(), action.item.start, action.item.end, action.item.interval );
   action.item.perf.history.add( firstRecord );
 
-  DataPersistance dao = await DataPersistance.instance;
-  var encoded = json.encode( store.state );
-  dao.save(encoded);
-  print( "save this encoded model -> " + encoded );
-
+  _saveState( store.state );
   next(action);
 }
 
 Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher next) async {
   print( "edit activity " + action.item.title.title );
 
-  DataPersistance dao = await DataPersistance.instance;
-  var encoded = json.encode( store.state );
-  dao.save(encoded);
-  print( "save this encoded model -> " + encoded );
-
+  _saveState( store.state );
   next(action);
 }
 
 Future _removeActivity(Store<AppState> store, RemoveActivity action, NextDispatcher next) async {
   print( "remove activity " + action.item.title.title  );
 
-  DataPersistance dao = await DataPersistance.instance;
-  var encoded = json.encode( store.state );
-  dao.save(encoded);
-  print( "save this encoded model -> " + encoded );
-
+  _saveState( store.state );
   next(action);
 }
 

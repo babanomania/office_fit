@@ -18,10 +18,10 @@ class ActivityViewModel {
     return {
       'title': this.title == null ? null : this.title.toJson(),
       'repetitions': this.repetitions,
-      'interval': this.interval.inMinutes,
+      'interval': this.interval == null ? null : this.interval.inMinutes,
       'when': this.when,
-      'start': this.start.inMinutes,
-      'end': this.end.inMinutes,
+      'start': this.start == null ? null : this.start.inMinutes,
+      'end': this.end == null ? null : this.end.inMinutes,
       'perf': this.perf == null ? null : this.perf.toJson(),
     };
   }
@@ -29,10 +29,10 @@ class ActivityViewModel {
   ActivityViewModel.fromJson(Map<String, dynamic> json)
       : title =  ActivityType.fromJson(json['title']),
         repetitions = json['repetitions'],
-        interval = new Duration( minutes : json['interval'] ),
+        interval = json['interval'] == null ? null : new Duration( minutes : json['interval'] ),
         when = json['when'],
-        start = new Duration( minutes : json['start'] ),
-        end = new Duration( minutes : json['end'] ),
+        start = json['start'] == null ? null : new Duration( minutes : json['start'] ),
+        end = json['end'] == null ? null : new Duration( minutes : json['end'] ),
         perf = ActivityPerformanceModel.fromJson(json['perf']);
 }
 

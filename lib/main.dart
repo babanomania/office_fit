@@ -11,9 +11,9 @@ import 'package:office_fit/redux/AppState.dart';
 import 'package:office_fit/redux/Reducers.dart';
 import 'package:office_fit/redux/Middleware.dart';
 import 'package:office_fit/redux/Actions.dart';
-
 import 'package:office_fit/util/DataPersistance.dart';
 import 'dart:async';
+import 'dart:convert';
 
 void main() => runApp(new OfficeFitApp());
 
@@ -26,9 +26,9 @@ class OfficeFitApp extends StatelessWidget {
           return new MyApp(
               store: Store<AppState>(
                         appReducer,
-                        initialState: snapshot.data.retreive() == null ?
+                        initialState: snapshot.data == null || snapshot.data.retreive() == null ?
                                             AppState.initial() :
-                                            AppState.fromJson( snapshot.data.retreive() ),
+                                            AppState.fromJson( json.decode(snapshot.data.retreive()) ),
 
                         middleware: createStoreMiddleware(),
                       )
