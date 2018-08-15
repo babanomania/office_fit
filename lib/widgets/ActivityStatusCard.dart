@@ -8,6 +8,7 @@ class ActivityStatusCard extends StatelessWidget {
   ActivityStatusCard({  this.isEnabled = true, this.imageAsset, this.title,
                         this.currentActivityCnt, this.totalActivityCnt,
                         this.nextNotification, this.notificationInterval ,
+                        this.start, this.end,
                         this.openDetail, this.deleteActivity,
                       });
 
@@ -21,6 +22,9 @@ class ActivityStatusCard extends StatelessWidget {
 
   final Duration nextNotification ;
   final Duration notificationInterval ;
+
+  final Duration start;
+  final Duration end;
 
   final VoidCallback openDetail ;
   final VoidCallback deleteActivity ;
@@ -67,12 +71,17 @@ class ActivityStatusCard extends StatelessWidget {
 
     final allTasksDone = ( currentActivityCnt == totalActivityCnt );
 
+    DateTime startTime = DurationUtil.atMidnight( DateTime.now() ).add( this.start );
+    DateTime endTime = DurationUtil.atMidnight( DateTime.now() ).add( this.start );
+    bool finishedInPast = endTime.isBefore( DateTime.now() );
+    bool startInFuture = startTime.isAfter( DateTime.now() );
+
     return new Column(
       children: <Widget>[
 
         new CircularProgress(
           isEnabled: this.isEnabled,
-          value: ( nextNotification.inMinutes / notificationInterval.inMinutes ),
+          value: startInFuture ? 0.0 : ( finishedInPast ? 1.0 : nextNotification.inMinutes / notificationInterval.inMinutes ),
           allDone: allTasksDone,
         ),
 

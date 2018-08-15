@@ -34,6 +34,9 @@ class ListActivitiesScreen extends StatelessWidget {
                   nextNotification: model.perf.history.last.nextNotification,
                   notificationInterval: model.interval,
 
+                  start: model.start,
+                  end: model.end,
+
                   openDetail: (() {
                     openDetail( model);
                     Navigator.pushNamed(context, AppRoutes.activityDetail);
