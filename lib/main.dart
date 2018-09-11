@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -12,14 +13,20 @@ import 'package:office_fit/redux/Reducers.dart';
 import 'package:office_fit/redux/Middleware.dart';
 import 'package:office_fit/redux/Actions.dart';
 import 'package:office_fit/util/DataPersistance.dart';
-import 'dart:async';
-import 'dart:convert';
+import 'package:office_fit/util/ReminderNotificationUtil.dart';
 
 void main() => runApp(new OfficeFitApp());
 
 class OfficeFitApp extends StatelessWidget {
+
+  stateInit(){
+    AppState.initial();
+    ReminderNotificationUtil.scheduleFromThisWeekend();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return new FutureBuilder<DataPersistance>(
         future: DataPersistance.instance,
         builder: (context, snapshot){
@@ -27,7 +34,7 @@ class OfficeFitApp extends StatelessWidget {
               store: Store<AppState>(
                         appReducer,
                         initialState: snapshot.data == null || snapshot.data.retreive() == null ?
-                                            AppState.initial() :
+                                            stateInit() :
                                             AppState.fromJson( json.decode(snapshot.data.retreive()) ),
 
                         middleware: createStoreMiddleware(),

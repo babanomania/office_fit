@@ -2,6 +2,8 @@
   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
     <CLASSES>
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.2" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.5.20" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/android_alarm_manager-0.2.1" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
