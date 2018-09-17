@@ -7,9 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/android_alarm_manager-0.2.1/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.5.20/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.2/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/temp_alarm_manager-0.2.1/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>

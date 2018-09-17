@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.officefit">
+    package="com.babanomania.officefit">
 
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
@@ -12,6 +12,7 @@
          In most cases you can leave this as-is, but you if you want to provide
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
+
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Office Fit"
@@ -34,9 +35,12 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <service
-                android:name="io.flutter.plugins.androidalarmmanager.AlarmService"
-                android:exported="false"/>
         </activity>
+
+        <service
+            android:name="io.flutter.plugins.androidalarmmanager.AlarmService"
+            android:exported="false"/>
+
+
     </application>
 </manifest>
