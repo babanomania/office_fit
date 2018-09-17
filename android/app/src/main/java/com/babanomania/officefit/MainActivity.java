@@ -1,4 +1,4 @@
-package com.example.officefit;
+package com.babanomania.officefit;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
