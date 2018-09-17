@@ -76,7 +76,7 @@ class ListActivitiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      
+
       return new Scaffold(
 
         appBar: new AppBar(

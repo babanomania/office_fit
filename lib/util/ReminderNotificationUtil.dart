@@ -2,7 +2,7 @@ import 'package:office_fit/models/ActivityViewModel.dart';
 import 'package:office_fit/util/DurationUtil.dart';
 import 'package:office_fit/util/DataPersistance.dart';
 import 'package:office_fit/redux/AppState.dart';
-import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:temp_alarm_manager/android_alarm_manager.dart';
 
 class ReminderNotificationUtil {
 
@@ -87,14 +87,16 @@ class ReminderNotificationUtil {
 
 
     if( addReminderDT ){
+
       ActivityDayRecord record = new ActivityDayRecord( recordDate: DurationUtil.atMidnight( reminderDT ), count: 0 );
-      _addNotifications( record.notifications, reminderDT, item.start, item.end, item.interval );
+      _addNotifications( record.notifications, reminderDT, item.start, item.end, item.interval, item.title.title );
       item.perf.history.add( record );
 
     }
+
   }
 
-  static _addNotifications( List<DateTime> notifications, DateTime when, Duration start, Duration end, Duration interval ){
+  static _addNotifications( List<DateTime> notifications, DateTime when, Duration start, Duration end, Duration interval, String title ){
 
     Duration startWith = new Duration( minutes: start.inMinutes );
     while( startWith.inMinutes <= end.inMinutes ){

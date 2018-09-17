@@ -1,11 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import 'dart:convert';
 
 class DataPersistance {
 
   SharedPreferences prefs;
-  final String DATA_KEY = "OFFICE_FIT_DATA";
+  static const String DATA_KEY = "OFFICE_FIT_DATA";
   static DataPersistance _instance = new DataPersistance();
 
   static Future<DataPersistance> get instance async {

@@ -118,7 +118,7 @@ class _AddNewActivityState extends State<AddNewActivityScreen>{
             text: "Submit",
             onPressed: ((){
               widget.onSubmit(_viewModel);
-              Navigator.pushNamed(context, AppRoutes.listActivities);
+              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.listActivities, (Route<dynamic> route) => false) ;
             }),
             enabled: isAllSelected(),
           ),

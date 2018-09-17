@@ -37,13 +37,15 @@ Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher ne
 Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher next) async {
   print( "edit activity " + action.item.title.title );
 
+  ReminderNotificationUtil.addRemindersThen( action.item, DateTime.now() );
+  ReminderNotificationUtil.addRemindersNextWeek( action.item );
+
   _saveState( store.state );
   next(action);
 }
 
 Future _removeActivity(Store<AppState> store, RemoveActivity action, NextDispatcher next) async {
   print( "remove activity " + action.item.title.title  );
-
   _saveState( store.state );
   next(action);
 }
