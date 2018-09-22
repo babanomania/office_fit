@@ -20,7 +20,7 @@ void main() => runApp(new OfficeFitApp());
 class OfficeFitApp extends StatelessWidget {
 
   stateInit(){
-    ReminderNotificationUtil.scheduleFromThisWeekend();
+    //ReminderNotificationUtil.;
     return AppState.initial();
   }
 

@@ -73,7 +73,7 @@ class _AddNewActivityState extends State<AddNewActivityScreen>{
           ),
 
           new DropdownNewDur(
-            title: "Interval period?",
+            title: "Remind Every ?",
             hint: "Select Interval",
             selected:  _viewModel.interval,
             values: <String, Duration>{

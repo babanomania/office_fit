@@ -27,8 +27,7 @@ _saveState( AppState state ) async {
 Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher next) async {
   print( "add activity " + action.item.title.title );
 
-  ReminderNotificationUtil.addRemindersThen( action.item, DateTime.now() );
-  ReminderNotificationUtil.addRemindersNextWeek( action.item );
+  ReminderNotificationUtil.addReminders( action.item, DateTime.now() );
 
   _saveState( store.state );
   next(action);
@@ -37,8 +36,7 @@ Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher ne
 Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher next) async {
   print( "edit activity " + action.item.title.title );
 
-  ReminderNotificationUtil.addRemindersThen( action.item, DateTime.now() );
-  ReminderNotificationUtil.addRemindersNextWeek( action.item );
+  ReminderNotificationUtil.addReminders( action.item, DateTime.now() );
 
   _saveState( store.state );
   next(action);
@@ -56,12 +54,12 @@ Future _selectActivity(Store<AppState> store, SelectActivity action, NextDispatc
 }
 
 Future _doActivity(Store<AppState> store, DoActivity action, NextDispatcher next) async {
-  print( "do activity " + action.item.title.title + ", " + action.item.perf.history.last.count.toString() + " times" );
+  print( "do activity " + action.item.title.title + ", " + action.item.perf.today().count.toString() + " times" );
   next(action);
 }
 
 Future _undoActivity(Store<AppState> store, UndoActivity action, NextDispatcher next) async {
-  print( "undo activity " + action.item.title.title + ", " + action.item.perf.history.last.count.toString() + " times");
+  print( "undo activity " + action.item.title.title + ", " + action.item.perf.today().count.toString() + " times");
   next(action);
 }
 

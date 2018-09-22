@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:office_fit/widgets/ActivityStatusCard.dart';
 import 'package:office_fit/AppRoutes.dart';
 import 'package:office_fit/models/ActivityViewModel.dart';
-import 'package:office_fit/util/DurationUtil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ListActivitiesScreen extends StatelessWidget {
@@ -22,16 +21,15 @@ class ListActivitiesScreen extends StatelessWidget {
 
                 new ActivityStatusCard(
 
-                  isEnabled: model.perf.history.last != null &&
-                             model.perf.history.last.recordDate == DurationUtil.atMidnight( DateTime.now() ),
+                  isEnabled: model.doRemindForDate( DateTime.now() ) && model.isPastTime( DateTime.now() ),
 
                   imageAsset: model.title.image,
                   title: model.title.title,
 
-                  currentActivityCnt: model.perf.history.last.count,
+                  currentActivityCnt: model.perf.today().count,
                   totalActivityCnt: model.repetitions,
 
-                  nextNotification: model.perf.history.last.nextNotification,
+                  nextNotification: model.nextNotification( DateTime.now() ),
                   notificationInterval: model.interval,
 
                   start: model.start,
@@ -41,6 +39,7 @@ class ListActivitiesScreen extends StatelessWidget {
                     openDetail( model);
                     Navigator.pushNamed(context, AppRoutes.activityDetail);
                   }),
+
                   deleteActivity: () => deleteActivity( model ),
                 ),
 

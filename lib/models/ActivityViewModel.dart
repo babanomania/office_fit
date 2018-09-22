@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:office_fit/util/DurationUtil.dart';
 
 class ActivityViewModel {
 
@@ -13,6 +14,88 @@ class ActivityViewModel {
 
   ActivityPerformanceModel perf = new ActivityPerformanceModel();
 
+  bool doRemindForDate( DateTime itemWhen ){
+
+    var dtWeekday = itemWhen.weekday;
+    bool doRemind = false;
+
+    if( this.when == 'Weekdays' ){
+        doRemind = ( dtWeekday != DateTime.saturday && dtWeekday != DateTime.sunday ) ? true : false ;
+
+    } else if( this.when == 'Mon to Sat' ){
+        doRemind = dtWeekday != DateTime.sunday ? true : false ;
+
+    } else if( this.when == 'Weekends' ){
+        doRemind = ( dtWeekday == DateTime.saturday || dtWeekday == DateTime.sunday ) ? true : false ;
+
+    } else if( this.when == 'Sunday' ){
+        doRemind = dtWeekday == DateTime.sunday ? true : false ;
+
+    } else if( this.when == 'Saturday' ){
+        doRemind = dtWeekday == DateTime.saturday ? true : false ;
+    }
+
+    return doRemind;
+  }
+
+  bool isPastTime( DateTime itemWhen ){
+    DateTime endOn = DurationUtil.atMidnight( itemWhen ).add( this.end );
+    return ( itemWhen.isBefore( endOn ) );
+  }
+
+  List<DateTime> getNotificationTimes( DateTime pWhen ){
+
+    List<DateTime> notifications = new List();
+    Duration startWith = new Duration( minutes: start.inMinutes );
+
+    while( startWith.inMinutes <= end.inMinutes ){
+      notifications.add(
+          DurationUtil.atMidnight( pWhen ).add( startWith )
+      );
+
+      startWith += interval;
+    }
+
+    return notifications;
+  }
+
+  Duration nextNotification( DateTime pWhen ){
+
+    if( doRemindForDate( pWhen ) ){
+
+      List<DateTime> notifications = getNotificationTimes(pWhen);
+      if( pWhen.isAfter( notifications.last ) ){
+        return nextNotificationOn( pWhen );
+
+      } else {
+        return notifications
+            .firstWhere((_dt) => _dt.isAfter( pWhen ))
+            .difference( pWhen );
+      }
+
+    } else {
+        return nextNotificationOn( pWhen );
+
+    }
+  }
+
+  Duration nextNotificationOn( DateTime pWhen ){
+
+    Duration nextNotificationOn = new Duration( minutes: 0 );
+
+    for( int dat=1; dat<=8; dat++ ){
+
+      DateTime thatDate = pWhen.add( new Duration( days: dat ) );
+      bool isEnabled = doRemindForDate( thatDate );
+
+      if( isEnabled ){
+        return new Duration( days: dat );
+      }
+
+    }
+
+    return nextNotificationOn;
+  }
 
   Map<String, dynamic> toJson(){
     return {
@@ -44,11 +127,33 @@ class ActivityPerformanceModel {
   ActivityDayRecord best;
   ActivityDayRecord worst;
 
+  ActivityDayRecord today(){
+
+    ActivityDayRecord today = new ActivityDayRecord( recordDate: DateTime.now(), count: 0 );
+    Iterable historySearch = history.where( (_adr) => _adr.recordDate == DurationUtil.atMidnight( DateTime.now() ) );
+
+    if( historySearch.isEmpty || ( historySearch.first == null ) ){
+      history.add( today );
+
+    } else {
+      today = historySearch.first;
+
+    }
+
+    history.retainWhere( (_adr) =>
+                            _adr.recordDate.isAfter(
+                                DurationUtil.atMidnight( DateTime.now() )
+                                            .subtract( Duration( days: 5 ) )
+                            )
+                        );
+    return today;
+  }
+
   Map<String, dynamic> toJson(){
     return {
       'history': this.history.map( (_adr) => _adr.toJson() ).toList(),
       'best': this.best == null ? null : this.best.toJson(),
-      'worst': this.worst == null ? null : this.worst.toJson(),
+      'worst': this.worst == null ? null : this.worst.toJson()
     };
   }
 
@@ -65,15 +170,6 @@ class ActivityDayRecord {
   final DateTime recordDate;
   int count;
 
-  List<DateTime> notifications = [];
-
-  bool get isPastToday => ( notifications == null || notifications.isEmpty || notifications.last.isBefore( DateTime.now() ));
-
-  Duration get nextNotification => isPastToday ? new Duration( minutes: 0 ) :
-                                        notifications
-                                          .firstWhere( (_dt) => _dt.isAfter( DateTime.now() ) )
-                                          .difference( DateTime.now() );
-
   String get date => new DateFormat( 'yyyy-MMM-dd' ).format( recordDate );
   String get day => new DateFormat( 'E' ).format( recordDate );
 
@@ -84,14 +180,12 @@ class ActivityDayRecord {
     return {
       'recordDate': this.recordDate.toString(),
       'count': this.count,
-      'notifications': this.notifications.map ( (_dt) => _dt.toString() ).toList(),
     };
   }
 
   ActivityDayRecord.fromJson(Map<String, dynamic> json)
       : recordDate =  DateTime.parse(json['recordDate']),
-        count = json['count'],
-        notifications = (json['notifications'] as List).map((i) => DateTime.parse(i)).toList();
+        count = json['count'];
 
 }
 
