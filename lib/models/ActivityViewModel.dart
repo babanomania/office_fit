@@ -64,10 +64,10 @@ class ActivityViewModel {
     if( doRemindForDate( pWhen ) ){
 
       List<DateTime> notifications = getNotificationTimes(pWhen);
-      if( pWhen.isAfter( notifications.last ) ){
+      if( notifications.isNotEmpty && pWhen.isAfter( notifications.last ) ){
         return nextNotificationOn( pWhen );
 
-      } else {
+      } else if ( notifications.isNotEmpty ){
         return notifications
             .firstWhere((_dt) => _dt.isAfter( pWhen ))
             .difference( pWhen );

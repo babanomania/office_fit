@@ -11,7 +11,9 @@ dependencies:
   redux: ^3.0.0
   flutter_redux: ^0.5.2
   shared_preferences: ^0.4.2
-  temp_alarm_manager: ^0.2.1
+  android_job_scheduler:
+      git:
+        url: https://github.com/babanomania/android_job_scheduler
 
 dev_dependencies:
   flutter_test:

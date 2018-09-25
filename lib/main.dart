@@ -13,16 +13,10 @@ import 'package:office_fit/redux/Reducers.dart';
 import 'package:office_fit/redux/Middleware.dart';
 import 'package:office_fit/redux/Actions.dart';
 import 'package:office_fit/util/DataPersistance.dart';
-import 'package:office_fit/util/ReminderNotificationUtil.dart';
 
 void main() => runApp(new OfficeFitApp());
 
 class OfficeFitApp extends StatelessWidget {
-
-  stateInit(){
-    //ReminderNotificationUtil.;
-    return AppState.initial();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +28,7 @@ class OfficeFitApp extends StatelessWidget {
               store: Store<AppState>(
                         appReducer,
                         initialState: snapshot.data == null || snapshot.data.retreive() == null ?
-                                            stateInit() :
+                                            AppState.initial() :
                                             AppState.fromJson( json.decode(snapshot.data.retreive()) ),
 
                         middleware: createStoreMiddleware(),
@@ -58,7 +52,7 @@ class MyApp extends StatelessWidget {
         store: this.store,
         child: new MaterialApp(
 
-                title: 'Office Fit Demo',
+                title: 'Office Fit',
 
                 theme: new ThemeData(
                     canvasColor: Colors.white,

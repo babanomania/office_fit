@@ -21,13 +21,19 @@ _saveState( AppState state ) async {
   DataPersistance dao = await DataPersistance.instance;
   var encoded = json.encode( state );
   dao.save(encoded);
+
+  if( dao.lastNotified == null ){
+    dao.lastNotified = DateTime.now();
+  }
+
   //print( "save this encoded model -> " + encoded );
 }
 
 Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher next) async {
   print( "add activity " + action.item.title.title );
 
-  ReminderNotificationUtil.addReminders( action.item, DateTime.now() );
+  ReminderNotificationUtil.cancelReminder();
+  ReminderNotificationUtil.addReminder( store.state, DateTime.now() );
 
   _saveState( store.state );
   next(action);
@@ -36,7 +42,8 @@ Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher ne
 Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher next) async {
   print( "edit activity " + action.item.title.title );
 
-  ReminderNotificationUtil.addReminders( action.item, DateTime.now() );
+  ReminderNotificationUtil.cancelReminder();
+  ReminderNotificationUtil.addReminder( store.state, DateTime.now() );
 
   _saveState( store.state );
   next(action);
@@ -44,6 +51,10 @@ Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher 
 
 Future _removeActivity(Store<AppState> store, RemoveActivity action, NextDispatcher next) async {
   print( "remove activity " + action.item.title.title  );
+
+  ReminderNotificationUtil.cancelReminder();
+  ReminderNotificationUtil.addReminder( store.state, DateTime.now() );
+
   _saveState( store.state );
   next(action);
 }
