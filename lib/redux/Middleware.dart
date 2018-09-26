@@ -30,33 +30,41 @@ _saveState( AppState state ) async {
 }
 
 Future _addActivity(Store<AppState> store, AddActivity action, NextDispatcher next) async {
-  print( "add activity " + action.item.title.title );
 
-  ReminderNotificationUtil.cancelReminder();
-  ReminderNotificationUtil.addReminder( store.state, DateTime.now() );
+  print( "add activity " + action.item.title.title );
+  next(action);
 
   _saveState( store.state );
-  next(action);
+
+  ReminderNotificationUtil reminderUtil = new ReminderNotificationUtil();
+  reminderUtil.cancelReminder();
+  reminderUtil.addReminder( store.state, DateTime.now() );
+
 }
 
 Future _editActivity(Store<AppState> store, EditActivity action, NextDispatcher next) async {
-  print( "edit activity " + action.item.title.title );
 
-  ReminderNotificationUtil.cancelReminder();
-  ReminderNotificationUtil.addReminder( store.state, DateTime.now() );
+  print( "edit activity " + action.item.title.title );
+  next(action);
 
   _saveState( store.state );
-  next(action);
+
+  ReminderNotificationUtil reminderUtil = new ReminderNotificationUtil();
+  reminderUtil.cancelReminder();
+  reminderUtil.addReminder( store.state, DateTime.now() );
 }
 
 Future _removeActivity(Store<AppState> store, RemoveActivity action, NextDispatcher next) async {
-  print( "remove activity " + action.item.title.title  );
 
-  ReminderNotificationUtil.cancelReminder();
-  ReminderNotificationUtil.addReminder( store.state, DateTime.now() );
+  print( "remove activity " + action.item.title.title  );
+  next(action);
 
   _saveState( store.state );
-  next(action);
+
+  ReminderNotificationUtil reminderUtil = new ReminderNotificationUtil();
+  reminderUtil.cancelReminder();
+  reminderUtil.addReminder( store.state, DateTime.now() );
+
 }
 
 Future _selectActivity(Store<AppState> store, SelectActivity action, NextDispatcher next) async {

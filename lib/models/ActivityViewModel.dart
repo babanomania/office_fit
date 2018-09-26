@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:office_fit/util/DurationUtil.dart';
+import 'package:flutter/foundation.dart';
 
 class ActivityViewModel {
 
@@ -56,6 +57,7 @@ class ActivityViewModel {
       startWith += interval;
     }
 
+    //debugPrint( "getNotificationTimes - " + notifications.toString() + " for pWhen " + pWhen.toString()  );
     return notifications;
   }
 
@@ -65,18 +67,26 @@ class ActivityViewModel {
 
       List<DateTime> notifications = getNotificationTimes(pWhen);
       if( notifications.isNotEmpty && pWhen.isAfter( notifications.last ) ){
+
+        debugPrint( "< nextNotification 1 " + " for pWhen " + pWhen.toString()  );
         return nextNotificationOn( pWhen );
 
       } else if ( notifications.isNotEmpty ){
+
+        debugPrint( "< nextNotification 2 " + " for pWhen " + pWhen.toString()  );
         return notifications
             .firstWhere((_dt) => _dt.isAfter( pWhen ))
             .difference( pWhen );
       }
 
     } else {
+
+        debugPrint( "< nextNotification 3 " + " for pWhen " + pWhen.toString()  );
         return nextNotificationOn( pWhen );
 
     }
+
+    return null;
   }
 
   Duration nextNotificationOn( DateTime pWhen ){
@@ -89,11 +99,13 @@ class ActivityViewModel {
       bool isEnabled = doRemindForDate( thatDate );
 
       if( isEnabled ){
+        debugPrint( "nextNotificationOn - days " + dat.toString() + " for pWhen " + pWhen.toString() );
         return new Duration( days: dat );
       }
 
     }
 
+    debugPrint( "nextNotificationOn - " + nextNotificationOn.toString() + " for pWhen " + pWhen.toString() );
     return nextNotificationOn;
   }
 
